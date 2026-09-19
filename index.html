@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo Hispano - Conectando Culturas</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#D9381E',
+                            terracotta: '#C85A32',
+                            gold: '#E6A100',
+                            warmBg: '#FAF6F0',
+                            darkNavy: '#1E293B',
+                            teal: '#0D9488',
+                            duolingo: '#58CC02'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF6F0;
+            color: #1E293B;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .active-tab {
+            background-color: #D9381E;
+            color: white;
+            box-shadow: 0 4px 12px rgba(217, 56, 30, 0.3);
+        }
+        .pulse-mic {
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(217, 56, 30, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(217, 56, 30, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(217, 56, 30, 0); }
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-gold selection:text-black">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 glass-card border-b border-orange-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- App Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('inicio')">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-red via-brand-gold to-brand-terracotta flex items-center justify-center text-white shadow-md transform hover:rotate-6 transition-transform">
+                        <i class="fa-solid me-0 fa-earth-americas text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-extrabold tracking-tight font-serif text-brand-darkNavy block leading-none">Mundo<span class="text-brand-red">Hispano</span></span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-amber-700">Diversidade Cultural</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Buttons -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 bg-orange-50/80 p-1.5 rounded-2xl border border-orange-200/60">
+                    <button id="nav-btn-inicio" onclick="switchTab('inicio')" class="nav-btn px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 active-tab">
+                        <i class="fa-solid fa-house mr-1.5"></i> Início
+                    </button>
+                    <button id="nav-btn-paises" onclick="switchTab('paises')" class="nav-btn px-4 py-2.5 rounded-xl font-semibold text-sm text-slate-700 hover:text-brand-red transition-all duration-200">
+                        <i class="fa-solid fa-globe mr-1.5"></i> Países
+                    </button>
+                    <button id="nav-btn-cultura" onclick="switchTab('cultura')" class="nav-btn px-4 py-2.5 rounded-xl font-semibold text-sm text-slate-700 hover:text-brand-red transition-all duration-200">
+                        <i class="fa-solid fa-icons mr-1.5"></i> Cultura
+                    </button>
+                    <button id="nav-btn-tradutor" onclick="switchTab('tradutor')" class="nav-btn px-4 py-2.5 rounded-xl font-semibold text-sm text-slate-700 hover:text-brand-red transition-all duration-200">
+                        <i class="fa-solid fa-language mr-1.5"></i> Tradutor por Voz
+                    </button>
+                </nav>
+
+                <!-- Action Buttons: QR Code / iOS & Duolingo & Manifesto -->
+                <div class="hidden lg:flex items-center space-x-2">
+                    <button onclick="openQRCodeModal()" class="px-3.5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors flex items-center shadow-sm" title="Acessar no iPhone / iOS via QR Code">
+                        <i class="fa-solid fa-qrcode mr-1.5 text-amber-400"></i> QR Code & iOS
+                    </button>
+                    <a href="https://www.duolingo.com/course/es/pt/Aprenda-espanhol" target="_blank" rel="noopener noreferrer" class="px-3 py-2.5 rounded-xl bg-[#58CC02] hover:bg-[#46a302] text-white text-xs font-bold transition-colors flex items-center shadow-sm" title="Praticar Espanhol no Duolingo">
+                        <i class="fa-solid fa-feather mr-1.5"></i> Duolingo
+                    </a>
+                    <button onclick="openManifestoModal()" class="px-3.5 py-2.5 rounded-xl bg-amber-100 text-amber-900 border border-amber-300/60 text-xs font-bold hover:bg-amber-200 transition-colors flex items-center shadow-sm">
+                        <i class="fa-solid fa-heart mr-1.5 text-brand-red"></i> Respeito
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="p-2 rounded-xl text-slate-700 hover:bg-orange-100 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl" id="mobile-menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 border-b border-orange-100 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('inicio'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm flex items-center text-slate-800 hover:bg-orange-50">
+                <i class="fa-solid fa-house w-6 text-brand-red"></i> Tela 1 - Início
+            </button>
+            <button onclick="switchTab('paises'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm flex items-center text-slate-800 hover:bg-orange-50">
+                <i class="fa-solid fa-globe w-6 text-brand-red"></i> Tela 2 - Países
+            </button>
+            <button onclick="switchTab('cultura'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm flex items-center text-slate-800 hover:bg-orange-50">
+                <i class="fa-solid fa-icons w-6 text-brand-red"></i> Tela 3 - Cultura
+            </button>
+            <button onclick="switchTab('tradutor'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm flex items-center text-slate-800 hover:bg-orange-50">
+                <i class="fa-solid fa-language w-6 text-brand-red"></i> Tela 4 - Tradutor por Voz
+            </button>
+            <button onclick="openQRCodeModal(); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm flex items-center text-slate-900 bg-slate-100">
+                <i class="fa-solid fa-qrcode w-6 text-slate-800"></i> QR Code & iOS (iPhone)
+            </button>
+            <a href="https://www.duolingo.com/course/es/pt/Aprenda-espanhol" target="_blank" rel="noopener noreferrer" class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm flex items-center text-white bg-[#58CC02]">
+                <i class="fa-solid fa-feather w-6"></i> Praticar no Duolingo
+            </a>
+            <button onclick="openManifestoModal(); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm flex items-center text-amber-900 bg-amber-50">
+                <i class="fa-solid fa-heart w-6 text-brand-red"></i> Mensagem sobre Diversidade
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ========================================== -->
+        <!-- TELA 1: INÍCIO (HERO & VISÃO GERAL) -->
+        <!-- ========================================== -->
+        <section id="screen-inicio" class="tab-screen space-y-12 animate-fade-in">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-amber-900 via-brand-terracotta to-brand-red text-white p-8 md:p-14 shadow-2xl">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="relative z-10 max-w-3xl space-y-6">
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 text-amber-200 border border-amber-300/30 backdrop-blur-md">
+                        <i class="fa-solid fa-sparkles mr-2 text-amber-300"></i> Projeto Cultural Escolar
+                    </span>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-serif leading-tight">
+                        Explorando a Diversidade do <span class="text-amber-300 underline decoration-amber-400/50 decoration-wavy">Mundo Hispânico</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-amber-100 font-light leading-relaxed">
+                        Uma jornada pelas culturas dos mais de 20 países que têm o espanhol como língua oficial. Descubra ritmos, sabores, expressões únicas e costumes fascinantes.
+                    </p>
+                    <div class="pt-4 flex flex-wrap gap-4 items-center">
+                        <button onclick="switchTab('paises')" class="px-8 py-4 bg-amber-400 text-slate-900 font-extrabold rounded-2xl shadow-lg hover:bg-amber-300 hover:scale-105 transition-all flex items-center group">
+                            <span>Iniciar Exploración</span>
+                            <i class="fa-solid fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                        <button onclick="openQRCodeModal()" class="px-6 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-2xl border border-white/20 backdrop-blur-md transition-all flex items-center">
+                            <i class="fa-solid fa-qrcode mr-2.5 text-amber-300"></i> Acessar no iPhone / Celular
+                        </button>
+                        <a href="https://www.duolingo.com/course/es/pt/Aprenda-espanhol" target="_blank" rel="noopener noreferrer" class="px-6 py-4 bg-[#58CC02] hover:bg-[#49a802] text-white font-extrabold rounded-2xl shadow-md transition-all flex items-center">
+                            <i class="fa-solid fa-feather mr-2 text-lg"></i> Estudar no Duolingo
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div class="glass-card p-6 rounded-2xl text-center border-orange-200/60 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-3xl md:text-4xl font-extrabold text-brand-red font-serif mb-1">21</div>
+                    <div class="text-xs uppercase tracking-wider font-bold text-slate-500">Países Oficiais</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center border-orange-200/60 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-3xl md:text-4xl font-extrabold text-brand-terracotta font-serif mb-1">+500M</div>
+                    <div class="text-xs uppercase tracking-wider font-bold text-slate-500">Falantes Nativos</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center border-orange-200/60 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-3xl md:text-4xl font-extrabold text-brand-gold font-serif mb-1">2ª</div>
+                    <div class="text-xs uppercase tracking-wider font-bold text-slate-500">Língua Materna Global</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center border-orange-200/60 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-3xl md:text-4xl font-extrabold text-teal-600 font-serif mb-1">∞</div>
+                    <div class="text-xs uppercase tracking-wider font-bold text-slate-500">Expressões Únicas</div>
+                </div>
+            </div>
+
+            <!-- Duolingo Integration Highlight Banner -->
+            <div class="bg-gradient-to-r from-[#58CC02]/15 via-emerald-500/10 to-teal-500/15 p-8 rounded-3xl border border-[#58CC02]/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-2xl bg-[#58CC02] text-white flex-shrink-0 flex items-center justify-center text-3xl shadow-md">
+                        <i class="fa-solid fa-feather"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold uppercase tracking-widest text-[#429902]">Prática Diária Gratuita</span>
+                        <h3 class="text-xl font-bold text-slate-900 font-serif">Aprenda Espanhol com o Duolingo</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Complemente o aprendizado cultural praticando vocabulário, gramática e pronúncia gratuitamente no curso oficial do Duolingo.
+                        </p>
+                    </div>
+                </div>
+                <a href="https://www.duolingo.com/course/es/pt/Aprenda-espanhol" target="_blank" rel="noopener noreferrer" class="px-6 py-3.5 bg-[#58CC02] hover:bg-[#46a302] text-white font-extrabold rounded-2xl shadow-md transition-all flex items-center flex-shrink-0 text-sm">
+                    <span>Abrir Curso no Duolingo</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-xs"></i>
+                </a>
+            </div>
+
+            <!-- Core Pillar Cards -->
+            <div class="space-y-6">
+                <div class="text-center max-w-2xl mx-auto">
+                    <h2 class="text-3xl font-extrabold font-serif text-brand-darkNavy">O que você vai encontrar aqui?</h2>
+                    <p class="text-slate-600 mt-2">Navegue pelas quatro seções do aplicativo para vivenciar a língua espanhola em suas múltiplas nuances.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div onclick="switchTab('paises')" class="glass-card p-8 rounded-3xl border border-orange-200/80 hover:border-brand-red/40 hover:shadow-xl transition-all cursor-pointer group">
+                        <div class="w-14 h-14 bg-red-100 text-brand-red rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-earth-americas"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-brand-darkNavy mb-2 group-hover:text-brand-red transition-colors">1. Países e Variedades</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            Explore as capitais, curiosidades, bandeiras e sotaques do México à Espanha, da Colômbia à Argentina.
+                        </p>
+                        <span class="text-brand-red font-bold text-xs uppercase tracking-wider flex items-center group-hover:underline">
+                            Ver Países <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </span>
+                    </div>
+
+                    <div onclick="switchTab('cultura')" class="glass-card p-8 rounded-3xl border border-orange-200/80 hover:border-brand-terracotta/40 hover:shadow-xl transition-all cursor-pointer group">
+                        <div class="w-14 h-14 bg-amber-100 text-brand-terracotta rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-brand-darkNavy mb-2 group-hover:text-brand-terracotta transition-colors">2. Mosaico Cultural</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            Gastronomia marcante (Paella, Tacos, Arepas), ritmos cativantes (Flamenco, Tango, Cumbia) e festas históricas.
+                        </p>
+                        <span class="text-brand-terracotta font-bold text-xs uppercase tracking-wider flex items-center group-hover:underline">
+                            Explorar Cultura <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </span>
+                    </div>
+
+                    <div onclick="switchTab('tradutor')" class="glass-card p-8 rounded-3xl border border-orange-200/80 hover:border-teal-500/40 hover:shadow-xl transition-all cursor-pointer group">
+                        <div class="w-14 h-14 bg-teal-100 text-teal-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-microphone-lines"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-brand-darkNavy mb-2 group-hover:text-teal-600 transition-colors">3. Voz & Prática</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            Fale em português e ouça a tradução em espanhol por voz. Aprenda falsos amigos e expressões nativas.
+                        </p>
+                        <span class="text-teal-600 font-bold text-xs uppercase tracking-wider flex items-center group-hover:underline">
+                            Abrir Tradutor <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Diversity Banner Message -->
+            <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 p-8 rounded-3xl border border-amber-300/50 flex flex-col md:flex-row items-center gap-6">
+                <div class="w-16 h-16 rounded-2xl bg-amber-400 text-slate-900 flex-shrink-0 flex items-center justify-center text-3xl shadow-md">
+                    <i class="fa-solid fa-quote-left"></i>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-lg font-bold text-slate-900 font-serif">O Valor da Igualdade na Diversidade</h3>
+                    <p class="text-slate-700 text-sm leading-relaxed">
+                        "A diversidade cultural não significa desigualdade de valor. Não existe um espanhol 'melhor' ou 'pior', nem uma cultura superior a outra. Cada país possui suas raízes, sua história e formas legítimas de viver e se expressar."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TELA 2: PAÍSES (EXPLORADOR HISTÓRICO) -->
+        <!-- ========================================== -->
+        <section id="screen-paises" class="tab-screen space-y-8 hidden">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-brand-red">Tela 2</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold font-serif text-brand-darkNavy mt-1">Países de Língua Espanhola</h2>
+                    <p class="text-slate-600 text-sm mt-1">Clique em um país para conhecer dados, pratos típicos, saudações com áudio e curiosidades.</p>
+                </div>
+
+                <!-- Region Selector Filter -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterCountries('all')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-sm">Todos</button>
+                    <button onclick="filterCountries('America do Norte/Central')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">América Central / Norte</button>
+                    <button onclick="filterCountries('América do Sul')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">América do Sul</button>
+                    <button onclick="filterCountries('Europa')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">Europa</button>
+                    <button onclick="filterCountries('Caribe')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">Caribe</button>
+                </div>
+            </div>
+
+            <!-- Grid of Country Cards -->
+            <div id="countries-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TELA 3: CULTURA (MOSAICO CULTURAL) -->
+        <!-- ========================================== -->
+        <section id="screen-cultura" class="tab-screen space-y-8 hidden">
+            <div>
+                <span class="text-xs font-extrabold uppercase tracking-widest text-brand-red">Tela 3</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold font-serif text-brand-darkNavy mt-1">Mosaico das Manifestações Culturais</h2>
+                <p class="text-slate-600 text-sm mt-1">Navegue pelas categorias abaixo para explorar tradições, gastronomia, ritmos e expressões locais.</p>
+            </div>
+
+            <!-- Sub-tabs for Culture Categories -->
+            <div class="flex flex-wrap border-b border-slate-200 gap-2 sm:gap-4 pb-2">
+                <button onclick="switchCultureSubtab('comidas')" id="cult-tab-comidas" class="culture-subtab px-4 py-2 rounded-xl text-sm font-bold bg-brand-red text-white">
+                    <i class="fa-solid fa-utensils mr-1.5"></i> Comidas Típicas
+                </button>
+                <button onclick="switchCultureSubtab('musicas')" id="cult-tab-musicas" class="culture-subtab px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-orange-100">
+                    <i class="fa-solid fa-music mr-1.5"></i> Música & Dança
+                </button>
+                <button onclick="switchCultureSubtab('festas')" id="cult-tab-festas" class="culture-subtab px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-orange-100">
+                    <i class="fa-solid fa-masks-theater mr-1.5"></i> Festas Grandes
+                </button>
+                <button onclick="switchCultureSubtab('expressoes')" id="cult-tab-expressoes" class="culture-subtab px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-orange-100">
+                    <i class="fa-solid fa-comments mr-1.5"></i> ExpressõesLocais
+                </button>
+                <button onclick="switchCultureSubtab('lugares')" id="cult-tab-lugares" class="culture-subtab px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-orange-100">
+                    <i class="fa-solid fa-monument mr-1.5"></i> Lugares Mágicos
+                </button>
+                <button onclick="switchCultureSubtab('quiz')" id="cult-tab-quiz" class="culture-subtab px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-orange-100">
+                    <i class="fa-solid fa-gamepad mr-1.5"></i> Desafio Cultural
+                </button>
+            </div>
+
+            <!-- Sub-tab contents -->
+            <div id="culture-subtab-content">
+                <!-- Injected dynamically based on subtab selection -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TELA 4: TRADUTOR POR VOZ & DICAS -->
+        <!-- ========================================== -->
+        <section id="screen-tradutor" class="tab-screen space-y-10 hidden">
+            <div>
+                <span class="text-xs font-extrabold uppercase tracking-widest text-brand-red">Tela 4</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold font-serif text-brand-darkNavy mt-1">Tradutor por Comando de Voz & Dicas</h2>
+                <p class="text-slate-600 text-sm mt-1">Fale em Português para traduzir instantaneamente para Espanhol com pronúncia em áudio e aprenda segredos do idioma.</p>
+            </div>
+
+            <!-- Voice Translator Main Interactive Box -->
+            <div class="grid lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-7 glass-card p-6 md:p-8 rounded-3xl border border-orange-200/80 shadow-xl space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-200/60 pb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+                            <h3 class="font-bold text-brand-darkNavy text-lg">Tradutor por Voz (Português ➔ Espanhol)</h3>
+                        </div>
+                        <span id="speech-status" class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Pronto para ouvir</span>
+                    </div>
+
+                    <!-- Voice Input Section -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-500">Texto Reconhecido ou Digitado (Português):</label>
+                        <div class="relative">
+                            <textarea id="pt-input-text" rows="3" placeholder="Clique no microfone e fale algo como: 'Olá, como posso encontrar um bom restaurante aqui?' ou digite..." class="w-full p-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-brand-red focus:border-transparent text-slate-800 text-base resize-none bg-white/80"></textarea>
+                            <button id="mic-btn" onclick="toggleSpeechRecognition()" class="absolute right-3 bottom-3 w-12 h-12 bg-brand-red hover:bg-red-700 text-white rounded-xl flex items-center justify-center shadow-md transition-all active:scale-95" title="Ativar Microfone">
+                                <i class="fa-solid fa-microphone text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Trigger Buttons -->
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="executeTranslation()" class="px-6 py-3 bg-brand-darkNavy text-white font-bold rounded-xl hover:bg-slate-800 shadow-md transition-all flex items-center">
+                            <i class="fa-solid fa-language mr-2 text-amber-400"></i> Traduzir para Espanhol
+                        </button>
+                        <button onclick="clearTranslator()" class="px-4 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all">
+                            Limpar
+                        </button>
+                    </div>
+
+                    <!-- Output Translation Section -->
+                    <div class="space-y-3 pt-2">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-brand-red">Tradução em Espanhol (Español):</label>
+                            <button onclick="speakCurrentSpanishTranslation()" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition-colors flex items-center">
+                                <i class="fa-solid fa-volume-high mr-1.5 text-brand-red"></i> Ouvir Pronúncia
+                            </button>
+                        </div>
+                        <div id="es-output-box" class="p-5 rounded-2xl bg-amber-500/10 border border-amber-300/40 min-h-[90px] text-lg font-semibold text-slate-900 leading-relaxed flex items-center">
+                            <span class="text-slate-400 font-normal italic text-sm">A tradução aparecerá aqui...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Tips & External Practice Sidebar -->
+                <div class="lg:col-span-5 space-y-6">
+                    <!-- Duolingo Direct Practice Widget Card -->
+                    <div class="glass-card p-6 rounded-3xl border border-[#58CC02]/40 bg-gradient-to-br from-[#58CC02]/10 to-emerald-500/5 shadow-md space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-[#58CC02] text-white flex items-center justify-center font-bold text-lg shadow-sm">
+                                <i class="fa-solid fa-feather"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand-darkNavy">Prática Diária no Duolingo</h4>
+                                <p class="text-xs text-slate-500">Treine pronúncia, vocabulário e escuta</p>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Quer aprimorar sua fluência? Pratique lições interativas no curso oficial de espanhol do Duolingo gratuitamente!
+                        </p>
+
+                        <a href="https://www.duolingo.com/course/es/pt/Aprenda-espanhol" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-[#58CC02] hover:bg-[#46a302] text-white rounded-xl text-xs font-extrabold transition-all flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-graduation-cap mr-2"></i> Ir para o Duolingo
+                        </a>
+                    </div>
+
+                    <!-- Falsos Amigos (Falsos Cognatos) Mini-Guide -->
+                    <div class="glass-card p-6 rounded-3xl border border-orange-200/80 shadow-md space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-brand-terracotta flex items-center justify-center font-bold text-lg">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand-darkNavy">Falsos Amigos ("Falsos Cognados")</h4>
+                                <p class="text-xs text-slate-500">Palavras parecidas com significados bem diferentes!</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2.5 text-sm">
+                            <div class="p-3 bg-white/70 rounded-xl border border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <span class="font-bold text-brand-red">Embarazada</span>
+                                    <span class="text-xs text-slate-500 block">Não é envergonhada!</span>
+                                </div>
+                                <span class="font-semibold text-emerald-700 text-xs bg-emerald-50 px-2.5 py-1 rounded-lg"> Significa Grávida</span>
+                            </div>
+                            <div class="p-3 bg-white/70 rounded-xl border border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <span class="font-bold text-brand-red">Exquisito</span>
+                                    <span class="text-xs text-slate-500 block">Não é esquisito/estranho!</span>
+                                </div>
+                                <span class="font-semibold text-emerald-700 text-xs bg-emerald-50 px-2.5 py-1 rounded-lg"> Significa Delicioso</span>
+                            </div>
+                            <div class="p-3 bg-white/70 rounded-xl border border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <span class="font-bold text-brand-red">Polvo</span>
+                                    <span class="text-xs text-slate-500 block">Não é o animal marinho polvo!</span>
+                                </div>
+                                <span class="font-semibold text-emerald-700 text-xs bg-emerald-50 px-2.5 py-1 rounded-lg"> Significa Poeira / Pó</span>
+                            </div>
+                            <div class="p-3 bg-white/70 rounded-xl border border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <span class="font-bold text-brand-red">Propina</span>
+                                    <span class="text-xs text-slate-500 block">Não é suborno ilícito!</span>
+                                </div>
+                                <span class="font-semibold text-emerald-700 text-xs bg-emerald-50 px-2.5 py-1 rounded-lg"> Significa Gorjeta</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic AI Cultural Tutor -->
+                    <div class="glass-card p-6 rounded-3xl border border-teal-200/80 shadow-md space-y-4 bg-gradient-to-br from-teal-500/5 to-emerald-500/5">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-lg">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand-darkNavy">Tutor Cultural Inteligente</h4>
+                                <p class="text-xs text-slate-500">Pergunte qualquer dúvida sobre o espanhol</p>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-2">
+                            <input type="text" id="ai-query-input" placeholder="Ex: Qual a diferença entre 'vos' e 'tú'?" class="flex-grow px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 bg-white">
+                            <button onclick="askGeminiTutor()" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all flex-shrink-0">
+                                Perguntar
+                            </button>
+                        </div>
+
+                        <div id="ai-response-box" class="p-3.5 bg-white/80 rounded-xl border border-teal-100 text-xs text-slate-700 min-h-[60px] hidden leading-relaxed">
+                            <!-- Answer inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL: QR CODE & COMPARTILHAMENTO (iOS/MOBILE) -->
+    <!-- ========================================== -->
+    <div id="qrcode-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-slate-200 space-y-6 relative transform scale-95 transition-transform duration-300" id="qrcode-modal-content">
+            <button onclick="closeQRCodeModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-xl mx-auto mb-2">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold font-serif text-brand-darkNavy">Acessar no iPhone / Celular</h3>
+                <p class="text-xs text-slate-500">Escaneie o QR Code abaixo com a câmera do seu celular para abrir a aplicação.</p>
+            </div>
+
+            <!-- Dynamic QR Code Container -->
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col items-center justify-center space-y-3">
+                <img id="qr-code-img" src="" alt="QR Code de Acesso" class="w-48 h-48 rounded-lg shadow-sm border border-slate-200">
+                <span class="text-[11px] font-semibold text-slate-400 text-center break-all max-w-xs" id="qr-url-text">Carregando link...</span>
+            </div>
+
+            <!-- Action Buttons for Link Sharing -->
+            <div class="space-y-3">
+                <button onclick="copyAppURL()" id="copy-url-btn" class="w-full py-3 bg-brand-darkNavy hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-colors flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-copy mr-2 text-amber-400"></i> Copiar Link do Aplicativo
+                </button>
+
+                <!-- Dedicated iOS / Safari Tip Card -->
+                <div class="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
+                    <div class="flex items-center space-x-1.5 font-bold">
+                        <i class="fa-brands fa-apple text-sm"></i>
+                        <span>Dica para iOS / iPhone (Safari):</span>
+                    </div>
+                    <p class="text-[11px] text-amber-800 leading-snug">
+                        Para salvar como aplicativo no seu iPhone, abra o link no <strong>Safari</strong>, toque no ícone de <strong>Compartilhar <i class="fa-solid fa-share-nodes text-[10px]"></i></strong> e escolha <strong>"Adicionar à Tela de Início"</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diversity & Respect Manifesto Modal Popup -->
+    <div id="manifesto-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-8 shadow-2xl border border-amber-200 space-y-6 relative transform scale-95 transition-transform duration-300" id="manifesto-content">
+            <button onclick="closeManifestoModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center space-x-3 text-brand-red">
+                <i class="fa-solid fa-heart-circle-check text-3xl"></i>
+                <h3 class="text-2xl font-extrabold font-serif text-brand-darkNavy">Mensagem Final: Diversidade e Respeito</h3>
+            </div>
+
+            <div class="space-y-4 text-slate-700 text-sm leading-relaxed">
+                <p class="font-medium text-base text-slate-900">
+                    "Diversidade não significa desigualdade de valor."
+                </p>
+                <p>
+                    Ao percorrer os diferentes territórios onde se fala espanhol, percebemos uma infinidade de sotaques, pratos típicos, rituais e expressões artísticas. Nenhuma variante da língua é 'errada' ou 'inferior'; pelo contrário, cada variação reflete a vivência, as migrações e as ancestralidades de seu povo.
+                </p>
+                <p>
+                    O respeito às diferenças culturais nos enriquece como seres humanos e constrói pontes de empatia global. Celebrar a diversidade é reconhecer o valor único contido em cada história.
+                </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button onclick="closeManifestoModal()" class="px-6 py-2.5 bg-brand-red text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-sm">
+                    Compreendido & Celebrar!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-red text-white flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                <div>
+                    <span class="text-lg font-bold text-white font-serif">MundoHispano</span>
+                    <p class="text-xs text-slate-500">Projeto de Apresentação da Diversidade Cultural de Língua Espanhola</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <a href="https://www.duolingo.com/course/es/pt/Aprenda-espanhol" target="_blank" rel="noopener noreferrer" class="text-xs text-[#58CC02] hover:underline font-bold flex items-center">
+                    <i class="fa-solid fa-feather mr-1"></i> Curso Duolingo
+                </a>
+                <button onclick="openQRCodeModal()" class="text-xs text-slate-400 hover:text-white transition-colors flex items-center">
+                    <i class="fa-solid fa-qrcode mr-1 text-amber-400"></i> QR Code / Mobile
+                </button>
+            </div>
+
+            <div class="text-center md:text-right text-xs space-y-1 text-slate-400">
+                <p>Criado para promover a empatia, o respeito intercultural e o aprendizado ativo.</p>
+                <p class="text-slate-500">Espanhol • Culturas • Festas • Tradições • Gastronomia</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* ==========================================
+           DATA & STATE MANAGEMENT
+           ========================================== */
+
+        // Spanish Speaking Countries Data
+        const countriesData = [
+            {
+                id: 'mexico',
+                name: 'México',
+                region: 'America do Norte/Central',
+                flag: '🇲🇽',
+                capital: 'Cidade do México',
+                population: '128.9 Milhões',
+                greeting: '¡Hola, qué onda carnal!',
+                dish: 'Tacos ao Pastor & Guacamole',
+                music: 'Mariachi & Ranchera',
+                fact: 'Possui a maior população de falantes de espanhol do mundo e o Chichén Itzá, uma das maravilhas do mundo.',
+                badge: 'Norte da América'
+            },
+            {
+                id: 'espanha',
+                name: 'Espanha (España)',
+                region: 'Europa',
+                flag: '🇪🇸',
+                capital: 'Madri',
+                population: '47.4 Milhões',
+                greeting: '¡Hola! ¿Qué tal, colega?',
+                dish: 'Paella Valenciana & Tapas',
+                music: 'Flamenco & Paso Doble',
+                fact: 'Berço do idioma espanhol (Castelhano) e da célebre dança e guitarra do Flamenco.',
+                badge: 'Europa'
+            },
+            {
+                id: 'argentina',
+                name: 'Argentina',
+                region: 'América do Sul',
+                flag: '🇦🇷',
+                capital: 'Buenos Aires',
+                population: '45.8 Milhões',
+                greeting: '¡Hola, che! ¿Cómo andás?',
+                dish: 'Asado Criollo & Alfajor',
+                music: 'Tango & Milonga',
+                fact: 'Famosa pelo tango nas ruas de Buenos Aires, as cordilheiras dos Andes e o mate tradicional.',
+                badge: 'Cone Sul'
+            },
+            {
+                id: 'colombia',
+                name: 'Colômbia',
+                region: 'América do Sul',
+                flag: '🇨🇴',
+                capital: 'Bogotá',
+                population: '51.8 Milhões',
+                greeting: '¡Hola, parce! ¿Qué más?',
+                dish: 'Bandeja Paisa & Arepas',
+                music: 'Cumbia & Vallenato',
+                fact: 'É o segundo país mais biodiverso do planeta e famoso pelo café de altíssima qualidade.',
+                badge: 'Andina / Caribe'
+            },
+            {
+                id: 'peru',
+                name: 'Peru (Perú)',
+                region: 'América do Sul',
+                flag: '🇵🇪',
+                capital: 'Lima',
+                population: '33.7 Milhões',
+                greeting: '¡Hola, habla causa!',
+                dish: 'Ceviche & Lomo Saltado',
+                music: 'Música Andina & Huayno',
+                fact: 'Berço do império Inca e abrigo do histórico santuário de Machu Picchu nas montanhas.',
+                badge: 'Andina'
+            },
+            {
+                id: 'chile',
+                name: 'Chile',
+                region: 'América do Sul',
+                flag: '🇨🇱',
+                capital: 'Santiago',
+                population: '19.5 Milhões',
+                greeting: '¡Wena po, compadre!',
+                dish: 'Empanadas de Pino & Pastel de Choclo',
+                music: 'Cueca',
+                fact: 'Abriga o Deserto do Atacama, o mais seco do mundo, e os impressionantes vulcões andinos.',
+                badge: 'Pacifico'
+            },
+            {
+                id: 'cuba',
+                name: 'Cuba',
+                region: 'Caribe',
+                flag: '🇨🇺',
+                capital: 'Havana',
+                population: '11.1 Milhões',
+                greeting: '¡Oye, qué bolá asere!',
+                dish: 'Ropa Vieja & Moros y Cristianos',
+                music: 'Salsa & Son Cubano',
+                fact: 'Famosa pelos carros clássicos retrô, pela arquitetura colonial e por ritmos contagiantes.',
+                badge: 'Caribe'
+            },
+            {
+                id: 'guatemala',
+                name: 'Guatemala',
+                region: 'America do Norte/Central',
+                flag: '🇬🇹',
+                capital: 'Cidade da Guatemala',
+                population: '17.8 Milhões',
+                greeting: '¡Hola, qué chilero!',
+                dish: 'Pepián de Pollo',
+                music: 'Marimba Tradicional',
+                fact: 'Coração da civilização Maia antiga com vulcões majestosos e o impressionante Lago Atitlán.',
+                badge: 'América Central'
+            }
+        ];
+
+        // Culture Data Sets
+        const cultureData = {
+            comidas: [
+                { title: 'Tacos al Pastor', country: 'México 🇲🇽', desc: 'Finas fatias de carne suína marinada em especiarias e pimentas, assada em espeto giratório e servida em tortilhas milho frescas com abacaxi.', img: '🌮' },
+                { title: 'Paella Valenciana', country: 'Espanha 🇪🇸', desc: 'Prato emblemático à base de arroz temperado com açafrão, frutos do mar ou carnes, cozido lentamente em uma panela larga e rasa.', img: '🥘' },
+                { title: 'Asado & Empanadas', country: 'Argentina 🇦🇷', desc: 'A tradição do churrasco feito lentamente na brasa, acompanhado do clássico molho chimichurri e empanadas recheadas.', img: '🥩' },
+                { title: 'Ceviche Fresco', country: 'Peru 🇵🇪', desc: 'Peixe fresco marinado instantaneamente no suco do limão, pimenta ají, cebola roxa e acompanhado por milho gigante e batata-doce.', img: '🥗' },
+                { title: 'Arepas de Queso', country: 'Colômbia 🇨🇴 / Venezuela 🇻🇪', desc: 'Massa redonda feita de farinha de milho pré-cozida, grelhada e recheada com queijo derretido, carnes ou ovos.', img: '🫓' }
+            ],
+            musicas: [
+                { title: 'Flamenco', country: 'Espanha 🇪🇸', style: 'Paixão, Violão & Zapateado', desc: 'Arte expressiva e profunda que combina o cante (canto), toque (violão espanhol) e baile (dança com percussão dos pés).' },
+                { title: 'Tango', country: 'Argentina 🇦🇷 & Uruguai 🇺🇾', style: 'Dramatismo & Elegância', desc: 'Dança de par sensual nascida nos bairros portenhos, acompanhada pela melancolia do instrumento bandoneón.' },
+                { title: 'Cumbia', country: 'Colômbia 🇨🇴', style: 'Ritmo Alegre & Percussão', desc: 'Mistura vibrante de tradições indígenas, africanas e espanholas com tambores, maracas e gaita de foles indígena.' },
+                { title: 'Mariachi', country: 'México 🇲🇽', style: 'Trompetes & Guitarrón', desc: 'Música folclórica executada por músicos vestidos com o traje tradicional de charro, celebrando festas e serenatas.' }
+            ],
+            festas: [
+                { title: 'Día de los Muertos', country: 'México 🇲🇽', date: '1 e 2 de Novembro', desc: 'Uma alegre e colorida celebração da vida e memória dos ancestrais com oferendas (altares), flores de cempasúchil e caveiras decoradas.' },
+                { title: 'La Tomatina', country: 'Espanha 🇪🇸 (Buñol)', date: 'Última Quarta de Agosto', desc: 'Festa mundialmente conhecida onde milhares de pessoas participam de uma gigantesca e divertida batalha de tomates nas ruas.' },
+                { title: 'Inti Raymi (Festa do Sol)', country: 'Peru 🇵🇪 (Cusco)', date: '24 de Junho', desc: 'Cerimônia ancestral incaica em honra ao Deus Sol (Inti), com trajes coloridos, rituais e recriação histórica na fortaleza de Sacsayhuamán.' },
+                { title: 'Feria de las Flores', country: 'Colômbia 🇨🇴 (Medellín)', date: 'Agosto', desc: 'Celebração da cultura camponesa e da biodiversidade com o desfile dos silvesteros carregando imensos arranjos de flores nas costas.' }
+            ],
+            expressoes: [
+                { phrase: '¡Qué padre!', country: 'México 🇲🇽', significado: 'Muito legal / Bacana', audioText: 'Qué padre' },
+                { phrase: '¡Mola mucho!', country: 'Espanha 🇪🇸', significado: 'Gostei muito / É ótimo', audioText: 'Mola mucho' },
+                { phrase: 'Che, ¿todo bien?', country: 'Argentina 🇦🇷', significado: 'Amigo/Ei, tudo bem?', audioText: 'Che, todo bien' },
+                { phrase: '¡Pura vida!', country: 'Costa Rica 🇨🇷', significado: 'Tudo ótimo / Vida plena', audioText: 'Pura vida' },
+                { phrase: '¡Bacano!', country: 'Colômbia 🇨🇴', significado: 'Excelente / Sensacional', audioText: 'Bacano' }
+            ],
+            lugares: [
+                { title: 'Machu Picchu', country: 'Peru 🇵🇪', desc: 'A misteriosa e grandiosa cidade perdida dos Incas no alto da Cordilheira dos Andes.' },
+                { title: 'Chichén Itzá', country: 'México 🇲🇽', desc: 'A monumental pirâmide maia de Kukulcán na Península de Yucatán.' },
+                { title: 'La Alhambra', country: 'Espanha 🇪🇸 (Granada)', desc: 'Complexo palaciano fascinante que demonstra o encontro entre a arquitetura islâmica e espanhola.' },
+                { title: 'Salar de Uyuni', country: 'Bolívia 🇧🇴', desc: 'O maior deserto de sal do mundo, transformando-se em um gigante espelho natural nas chuvas.' }
+            ]
+        };
+
+        // Quiz Questions Data
+        const quizQuestions = [
+            {
+                q: 'Em qual país a celebração do "Día de los Muertos" é patrimônio imaterial famoso por seus altares coloridos?',
+                options: ['Argentina', 'México', 'Espanha', 'Chile'],
+                answer: 1,
+                explanation: 'O México é mundialmente famoso pelo Día de los Muertos, onde celebram a memória dos entes queridos com flores e oferendas.'
+            },
+            {
+                q: 'O que significa a expressão "¡Pura vida!" muito usada na Costa Rica?',
+                options: ['Comer comida saudável', 'Uma saudação de alegria e bem-estar', 'Desejar boa sorte nas provas', 'Pedir ajuda na rua'],
+                answer: 1,
+                explanation: '¡Pura Vida! é o lema nacional da Costa Rica para expressar gratidão, otimismo e vida boa.'
+            },
+            {
+                q: 'Se alguém na Espanha disser que um prato está "Exquisito", o que essa pessoa quis dizer?',
+                options: ['Que a comida está horrível', 'Que a comida está muito saborosa/deliciosa', 'Que o prato está frio', 'Que tem tempero estragado'],
+                answer: 1,
+                explanation: 'Em espanhol, "Exquisito" é um falso amigo que significa delicioso, saboroso!'
+            },
+            {
+                q: 'Qual o ritmo e dança sensual de par originário de Buenos Aires (Argentina) e Montevidéu (Uruguai)?',
+                options: ['Salsa', 'Flamenco', 'Tango', 'Reggaeton'],
+                answer: 2,
+                explanation: 'O Tango nasceu nas regiões portuárias do Rio da Prata entre Argentina e Uruguai.'
+            }
+        ];
+
+        /* ==========================================
+           NAVIGATION & UI LOGIC
+           ========================================== */
+
+        let currentTab = 'inicio';
+        let currentCultureSubtab = 'comidas';
+        let quizIndex = 0;
+        let quizScore = 0;
+        let speechRecognitionInstance = null;
+        let isListening = false;
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-screen').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`screen-${tabId}`).classList.remove('hidden');
+
+            // Update nav buttons style
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-700');
+            });
+            const activeBtn = document.getElementById(`nav-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active-tab');
+                activeBtn.classList.remove('text-slate-700');
+            }
+
+            // Scroll to top smooth
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        /* ==========================================
+           QR CODE & IOS SHARE MODAL
+           ========================================== */
+
+        function openQRCodeModal() {
+            const modal = document.getElementById('qrcode-modal');
+            const content = document.getElementById('qrcode-modal-content');
+            const qrImg = document.getElementById('qr-code-img');
+            const qrUrlText = document.getElementById('qr-url-text');
+
+            // Get current location or default fallback
+            const currentUrl = window.location.href;
+            qrUrlText.innerText = currentUrl;
+
+            // Generate QR code using QRServer API
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(currentUrl)}`;
+            qrImg.src = qrApiUrl;
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+
+        function closeQRCodeModal() {
+            const modal = document.getElementById('qrcode-modal');
+            const content = document.getElementById('qrcode-modal-content');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+        }
+
+        function copyAppURL() {
+            const currentUrl = window.location.href;
+            navigator.clipboard.writeText(currentUrl).then(() => {
+                const btn = document.getElementById('copy-url-btn');
+                btn.innerHTML = '<i class="fa-solid fa-check mr-2 text-emerald-400"></i> Link Copiado!';
+                btn.classList.remove('bg-brand-darkNavy');
+                btn.classList.add('bg-emerald-700');
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fa-solid fa-copy mr-2 text-amber-400"></i> Copiar Link do Aplicativo';
+                    btn.classList.add('bg-brand-darkNavy');
+                    btn.classList.remove('bg-emerald-700');
+                }, 2500);
+            }).catch(err => {
+                alert('URL para copiar: ' + currentUrl);
+            });
+        }
+
+        function openManifestoModal() {
+            const modal = document.getElementById('manifesto-modal');
+            const content = document.getElementById('manifesto-content');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+
+        function closeManifestoModal() {
+            const modal = document.getElementById('manifesto-modal');
+            const content = document.getElementById('manifesto-content');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+        }
+
+        /* ==========================================
+           SCREEN 2: COUNTRIES RENDERING
+           ========================================== */
+
+        function renderCountries(filterRegion = 'all') {
+            const container = document.getElementById('countries-grid');
+            container.innerHTML = '';
+
+            const filtered = filterRegion === 'all' 
+                ? countriesData 
+                : countriesData.filter(c => c.region === filterRegion);
+
+            filtered.forEach(country => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-6 rounded-3xl border border-orange-200/80 hover:shadow-xl transition-all flex flex-col justify-between group";
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-4xl">${country.flag}</span>
+                            <span class="px-2.5 py-1 bg-amber-100 text-amber-900 rounded-full text-[10px] font-extrabold uppercase tracking-wider">${country.badge}</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold font-serif text-brand-darkNavy group-hover:text-brand-red transition-colors">${country.name}</h3>
+                            <p class="text-xs font-semibold text-slate-500">Capital: <span class="text-slate-800">${country.capital}</span> | Pop: ${country.population}</p>
+                        </div>
+                        <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200/60 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] font-bold text-amber-800 uppercase block">Saudação Típica:</span>
+                                <span class="text-sm font-extrabold text-slate-900">${country.greeting}</span>
+                            </div>
+                            <button onclick="speakSpanish('${country.greeting}')" class="w-9 h-9 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-900 flex items-center justify-center shadow-sm transition-transform active:scale-90" title="Ouvir Áudio">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="text-xs space-y-1.5 text-slate-600">
+                            <p><strong class="text-slate-800">Prato:</strong> ${country.dish}</p>
+                            <p><strong class="text-slate-800">Ritmo:</strong> ${country.music}</p>
+                            <p class="pt-2 text-slate-500 italic leading-snug border-t border-slate-100"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> "${country.fact}"</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterCountries(region) {
+            document.querySelectorAll('.country-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-900', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700');
+            });
+            event.target.classList.add('bg-slate-900', 'text-white');
+            event.target.classList.remove('bg-white', 'text-slate-700');
+            renderCountries(region);
+        }
+
+        /* ==========================================
+           SCREEN 3: CULTURE SUBTABS RENDERING
+           ========================================== */
+
+        function switchCultureSubtab(subtabKey) {
+            currentCultureSubtab = subtabKey;
+            
+            // Highlight buttons
+            document.querySelectorAll('.culture-subtab').forEach(btn => {
+                btn.classList.remove('bg-brand-red', 'text-white');
+                btn.classList.add('text-slate-600');
+            });
+            const activeSubtabBtn = document.getElementById(`cult-tab-${subtabKey}`);
+            if (activeSubtabBtn) {
+                activeSubtabBtn.classList.add('bg-brand-red', 'text-white');
+                activeSubtabBtn.classList.remove('text-slate-600');
+            }
+
+            const container = document.getElementById('culture-subtab-content');
+
+            if (subtabKey === 'comidas') {
+                container.innerHTML = `
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                        ${cultureData.comidas.map(item => `
+                            <div class="glass-card p-6 rounded-3xl border border-orange-200/80 shadow-sm space-y-3">
+                                <div class="text-4xl">${item.img}</div>
+                                <span class="text-xs font-bold text-brand-red uppercase tracking-wider block">${item.country}</span>
+                                <h4 class="text-xl font-bold font-serif text-brand-darkNavy">${item.title}</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (subtabKey === 'musicas') {
+                container.innerHTML = `
+                    <div class="grid sm:grid-cols-2 gap-6 animate-fade-in">
+                        ${cultureData.musicas.map((m, idx) => `
+                            <div class="glass-card p-6 rounded-3xl border border-orange-200/80 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-orange-100 text-brand-terracotta">${m.country}</span>
+                                    <button onclick="playSampleRhythm(${idx})" class="px-3 py-1.5 bg-brand-terracotta text-white rounded-xl text-xs font-bold hover:bg-orange-700 transition-all flex items-center">
+                                        <i class="fa-solid fa-play mr-1.5 text-[10px]"></i> Ouvir Batida
+                                    </button>
+                                </div>
+                                <h4 class="text-2xl font-bold font-serif text-brand-darkNavy">${m.title}</h4>
+                                <p class="text-xs font-semibold text-amber-700">${m.style}</p>
+                                <p class="text-xs text-slate-600 leading-relaxed">${m.desc}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (subtabKey === 'festas') {
+                container.innerHTML = `
+                    <div class="grid sm:grid-cols-2 gap-6 animate-fade-in">
+                        ${cultureData.festas.map(f => `
+                            <div class="glass-card p-6 rounded-3xl border border-orange-200/80 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold text-brand-red uppercase">${f.country}</span>
+                                    <span class="text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-md"><i class="fa-solid fa-calendar-day mr-1"></i> ${f.date}</span>
+                                </div>
+                                <h4 class="text-xl font-bold font-serif text-brand-darkNavy">${f.title}</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">${f.desc}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (subtabKey === 'expressoes') {
+                container.innerHTML = `
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                        ${cultureData.expressoes.map(exp => `
+                            <div class="glass-card p-6 rounded-3xl border border-orange-200/80 space-y-3 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-400 block">${exp.country}</span>
+                                    <h4 class="text-2xl font-extrabold text-brand-red mt-1 font-serif">"${exp.phrase}"</h4>
+                                    <p class="text-xs text-slate-700 mt-2"><strong>Significado:</strong> ${exp.significado}</p>
+                                </div>
+                                <button onclick="speakSpanish('${exp.audioText}')" class="w-full py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl text-xs font-bold transition-colors flex items-center justify-center">
+                                    <i class="fa-solid fa-volume-high mr-2 text-brand-red"></i> Ouvir Pronúncia
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (subtabKey === 'lugares') {
+                container.innerHTML = `
+                    <div class="grid sm:grid-cols-2 gap-6 animate-fade-in">
+                        ${cultureData.lugares.map(lug => `
+                            <div class="glass-card p-6 rounded-3xl border border-orange-200/80 space-y-2">
+                                <span class="text-xs font-bold text-brand-red uppercase">${lug.country}</span>
+                                <h4 class="text-xl font-bold font-serif text-brand-darkNavy">${lug.title}</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">${lug.desc}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (subtabKey === 'quiz') {
+                renderQuiz();
+            }
+        }
+
+        /* ==========================================
+           QUIZ MINI-GAME LOGIC
+           ========================================== */
+
+        function renderQuiz() {
+            const container = document.getElementById('culture-subtab-content');
+            if (quizIndex >= quizQuestions.length) {
+                container.innerHTML = `
+                    <div class="glass-card p-8 rounded-3xl border border-amber-300 text-center max-w-xl mx-auto space-y-4 animate-fade-in">
+                        <div class="w-16 h-16 bg-amber-400 rounded-2xl flex items-center justify-center text-3xl mx-auto text-slate-900 shadow-md">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold font-serif text-brand-darkNavy">Desafio Concluído!</h3>
+                        <p class="text-lg font-bold text-brand-red">Você acertou ${quizScore} de ${quizQuestions.length} perguntas!</p>
+                        <p class="text-xs text-slate-600">Parabéns por expandir seus conhecimentos sobre a incrível diversidade dos países de língua espanhola.</p>
+                        <button onclick="resetQuiz()" class="px-6 py-3 bg-brand-darkNavy text-white font-bold rounded-xl hover:bg-slate-800 text-xs transition-all">
+                            Tentar Novamente
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const q = quizQuestions[quizIndex];
+            container.innerHTML = `
+                <div class="glass-card p-8 rounded-3xl border border-orange-200/80 max-w-2xl mx-auto space-y-6 animate-fade-in">
+                    <div class="flex justify-between items-center text-xs font-bold text-slate-400">
+                        <span>Pergunta ${quizIndex + 1} de ${quizQuestions.length}</span>
+                        <span>Pontuação: ${quizScore}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-darkNavy">${q.q}</h3>
+                    <div class="space-y-3">
+                        ${q.options.map((opt, i) => `
+                            <button onclick="submitQuizAnswer(${i})" class="w-full text-left p-4 rounded-2xl bg-white hover:bg-orange-50 border border-slate-200 hover:border-brand-red font-semibold text-sm text-slate-800 transition-all">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitQuizAnswer(selectedIndex) {
+            const q = quizQuestions[quizIndex];
+            if (selectedIndex === q.answer) {
+                quizScore++;
+                alert(`¡Excelente! Resposta Correta! 🎉\n\n${q.explanation}`);
+            } else {
+                alert(`Ops! A resposta correta era: ${q.options[q.answer]}.\n\n${q.explanation}`);
+            }
+            quizIndex++;
+            renderQuiz();
+        }
+
+        function resetQuiz() {
+            quizIndex = 0;
+            quizScore = 0;
+            renderQuiz();
+        }
+
+        /* ==========================================
+           SCREEN 4: VOICE TRANSLATOR & SPEECH API
+           ========================================== */
+
+        // Offline Fast Dictionary Fallback
+        const dictionary = {
+            'olá': '¡Hola!',
+            'bom dia': '¡Buenos días!',
+            'boa tarde': '¡Buenas tardes!',
+            'boa noite': '¡Buenas noches!',
+            'como vai': '¿Cómo estás?',
+            'tudo bem': '¿Todo bien?',
+            'obrigado': 'Gracias',
+            'obrigada': 'Gracias',
+            'por favor': 'Por favor',
+            'comida': 'Comida',
+            'água': 'Agua',
+            'onde fica': '¿Dónde está?',
+            'restaurante': 'Restaurante',
+            'amigo': 'Amigo',
+            'diversidade': 'Diversidad',
+            'respeito': 'Respeto',
+            'cultura': 'Cultura'
+        };
+
+        function toggleSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert('Seu navegador não suporta a entrada por voz direta. Você pode digitar o texto no campo.');
+                return;
+            }
+
+            if (isListening) {
+                speechRecognitionInstance.stop();
+                return;
+            }
+
+            speechRecognitionInstance = new SpeechRecognition();
+            speechRecognitionInstance.lang = 'pt-BR';
+            speechRecognitionInstance.continuous = false;
+            speechRecognitionInstance.interimResults = false;
+
+            const micBtn = document.getElementById('mic-btn');
+            const statusLabel = document.getElementById('speech-status');
+
+            speechRecognitionInstance.onstart = function() {
+                isListening = true;
+                micBtn.classList.add('pulse-mic', 'bg-red-600');
+                statusLabel.innerText = 'Ouvindo em Português...';
+                statusLabel.className = 'text-xs font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full animate-pulse';
+            };
+
+            speechRecognitionInstance.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('pt-input-text').value = transcript;
+                executeTranslation();
+            };
+
+            speechRecognitionInstance.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                statusLabel.innerText = 'Erro ao ouvir';
+                stopMicUI();
+            };
+
+            speechRecognitionInstance.onend = function() {
+                stopMicUI();
+            };
+
+            speechRecognitionInstance.start();
+        }
+
+        function stopMicUI() {
+            isListening = false;
+            const micBtn = document.getElementById('mic-btn');
+            const statusLabel = document.getElementById('speech-status');
+            micBtn.classList.remove('pulse-mic', 'bg-red-600');
+            statusLabel.innerText = 'Pronto para ouvir';
+            statusLabel.className = 'text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full';
+        }
+
+        function executeTranslation() {
+            const inputPt = document.getElementById('pt-input-text').value.trim();
+            const outputBox = document.getElementById('es-output-box');
+
+            if (!inputPt) {
+                outputBox.innerHTML = '<span class="text-slate-400 font-normal italic text-sm">Por favor, digite ou fale algo em português...</span>';
+                return;
+            }
+
+            outputBox.innerHTML = '<span class="text-brand-red font-semibold animate-pulse text-sm">Traduzindo...</span>';
+
+            // Simple offline translation lookup or generative fallback
+            let lowerPt = inputPt.toLowerCase().trim();
+            let translated = '';
+
+            // Check dictionary word match
+            if (dictionary[lowerPt]) {
+                translated = dictionary[lowerPt];
+            } else {
+                // Heuristic simple translation mapping for demo
+                translated = simpleTranslateText(inputPt);
+            }
+
+            setTimeout(() => {
+                outputBox.innerHTML = `<span id="current-es-text">${translated}</span>`;
+                // Auto speak
+                speakSpanish(translated);
+            }, 400);
+        }
+
+        function simpleTranslateText(text) {
+            // Replaces basic portuguese structures into spanish equivalent
+            let t = text
+                .replace(/olá/gi, 'hola')
+                .replace(/bom dia/gi, 'buenos días')
+                .replace(/boa tarde/gi, 'buenas tardes')
+                .replace(/boa noite/gi, 'buenas noches')
+                .replace(/tudo bem/gi, 'todo bien')
+                .replace(/como você está/gi, 'cómo estás')
+                .replace(/obrigado|obrigada/gi, 'gracias')
+                .replace(/por favor/gi, 'por favor')
+                .replace(/meu nome é/gi, 'mi nombre es')
+                .replace(/onde fica/gi, 'dónde está')
+                .replace(/eu quero/gi, 'yo quiero')
+                .replace(/gosto de/gi, 'me gusta')
+                .replace(/muito obrigado/gi, 'muchas gracias')
+                .replace(/você/gi, 'tú')
+                .replace(/amigo/gi, 'amigo')
+                .replace(/comida/gi, 'comida')
+                .replace(/água/gi, 'agua');
+
+            if (t === text) {
+                return `[Tradução estimada]: ¡${text}! (En español: ¿Podrías repetir?)`;
+            }
+            return t;
+        }
+
+        function clearTranslator() {
+            document.getElementById('pt-input-text').value = '';
+            document.getElementById('es-output-box').innerHTML = '<span class="text-slate-400 font-normal italic text-sm">A tradução aparecerá aqui...</span>';
+        }
+
+        function speakCurrentSpanishTranslation() {
+            const esTextEl = document.getElementById('current-es-text');
+            if (esTextEl) {
+                speakSpanish(esTextEl.innerText);
+            } else {
+                speakSpanish('Hola, bienvenido al Mundo Hispano');
+            }
+        }
+
+        function speakSpanish(text) {
+            if (!('speechSynthesis' in window)) {
+                alert('Seu navegador não suporta a síntese de voz.');
+                return;
+            }
+            window.speechSynthesis.cancel(); // Stop active audio
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES'; // Standard Spanish
+            utterance.rate = 0.95; // Natural pace
+            window.speechSynthesis.speak(utterance);
+        }
+
+        /* Web Audio Sound Synthesizer for Rhythm Samples */
+        function playSampleRhythm(rhythmIdx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+
+            // Play short percussive beat sequence
+            let now = ctx.currentTime;
+            for (let i = 0; i < 4; i++) {
+                let osc = ctx.createOscillator();
+                let gain = ctx.createGain();
+                osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+                osc.frequency.setValueAtTime(i % 2 === 0 ? 180 : 320, now + i * 0.25);
+                gain.gain.setValueAtTime(0.3, now + i * 0.25);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.25 + 0.15);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + i * 0.25);
+                osc.stop(now + i * 0.25 + 0.15);
+            }
+        }
+
+        /* ==========================================
+           GEMINI AI INTEGRATION FOR TUTOR
+           ========================================== */
+
+        async function askGeminiTutor() {
+            const input = document.getElementById('ai-query-input');
+            const responseBox = document.getElementById('ai-response-box');
+            const query = input.value.trim();
+
+            if (!query) return;
+
+            responseBox.classList.remove('hidden');
+            responseBox.innerHTML = '<span class="text-teal-600 font-semibold animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-1"></i> O Tutor Cultural está pensando...</span>';
+
+            const apiKey = ""; // Canvas runtime injection
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const systemPrompt = "Você é um tutor cultural e de espanhol extremamente amigável, didático e entusiasmado. Responda em português de forma concisa (máximo 3 frases) sobre dúvidas de espanhol ou cultura hispânica.";
+
+            const payload = {
+                contents: [{ parts: [{ text: query }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const res = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
