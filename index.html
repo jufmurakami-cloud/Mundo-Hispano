@@ -309,11 +309,11 @@
 
                 <!-- Region Selector Filter -->
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="filterCountries('all')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-sm">Todos</button>
-                    <button onclick="filterCountries('America do Norte/Central')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">América Central / Norte</button>
-                    <button onclick="filterCountries('América do Sul')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">América do Sul</button>
-                    <button onclick="filterCountries('Europa')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">Europa</button>
-                    <button onclick="filterCountries('Caribe')" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">Caribe</button>
+                    <button onclick="filterCountries('all', this)" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-sm">Todos</button>
+                    <button onclick="filterCountries('America do Norte/Central', this)" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">América Central / Norte</button>
+                    <button onclick="filterCountries('América do Sul', this)" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">América do Sul</button>
+                    <button onclick="filterCountries('Europa', this)" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">Europa</button>
+                    <button onclick="filterCountries('Caribe', this)" class="country-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-orange-50">Caribe</button>
                 </div>
             </div>
 
@@ -939,13 +939,17 @@
             });
         }
 
-        function filterCountries(region) {
+        function filterCountries(region, clickedButton) {
             document.querySelectorAll('.country-filter-btn').forEach(btn => {
                 btn.classList.remove('bg-slate-900', 'text-white');
                 btn.classList.add('bg-white', 'text-slate-700');
             });
-            event.target.classList.add('bg-slate-900', 'text-white');
-            event.target.classList.remove('bg-white', 'text-slate-700');
+
+            if (clickedButton) {
+                clickedButton.classList.add('bg-slate-900', 'text-white');
+                clickedButton.classList.remove('bg-white', 'text-slate-700');
+            }
+
             renderCountries(region);
         }
 
@@ -1295,32 +1299,80 @@
         }
 
         /* ==========================================
-           GEMINI AI INTEGRATION FOR TUTOR
-           ========================================== */
+           TUTOR CULTURAL LOCAL
+           ==========================================
+           A versão publicada no GitHub Pages não usa uma
+           chave de API no navegador. Isso evita expor uma
+           credencial e mantém o site funcionando.
+        */
 
-        async function askGeminiTutor() {
+        function askGeminiTutor() {
             const input = document.getElementById('ai-query-input');
             const responseBox = document.getElementById('ai-response-box');
-            const query = input.value.trim();
 
-            if (!query) return;
+            if (!input || !responseBox) return;
+
+            const query = input.value.trim();
+            if (!query) {
+                responseBox.classList.remove('hidden');
+                responseBox.innerHTML = '<span class="text-slate-500">Digite uma dúvida para o Tutor Cultural.</span>';
+                return;
+            }
+
+            const q = query.toLowerCase();
+            let answer = '';
+
+            if (q.includes('vos') && q.includes('tú') || q.includes('vos') && q.includes('tu')) {
+                answer = '<strong>Vos</strong> e <strong>tú</strong> são formas de tratamento informal. “Vos” é muito usado em países como Argentina e Uruguai, enquanto “tú” é comum em grande parte do mundo hispânico.';
+            } else if (q.includes('hola') || q.includes('saudação') || q.includes('cumprimento')) {
+                answer = '<strong>Hola</strong> significa “olá”. Para cumprimentar, também podemos usar “Buenos días” (bom dia), “Buenas tardes” (boa tarde) e “Buenas noches” (boa noite).';
+            } else if (q.includes('espanhol') || q.includes('español')) {
+                answer = 'O espanhol é uma língua falada em vários países e apresenta diferenças de vocabulário, pronúncia e expressões entre as regiões. Essa diversidade é uma das características mais interessantes do mundo hispânico!';
+            } else if (q.includes('argentina') || q.includes('uruguai') || q.includes('uruguay')) {
+                answer = 'Na Argentina e no Uruguai, o espanhol apresenta características próprias, como o uso frequente de “vos” e a pronúncia típica do espanhol rioplatense.';
+            } else if (q.includes('mexico') || q.includes('méxico')) {
+                answer = 'O México é um país de grande diversidade cultural. Sua cultura reúne influências indígenas e históricas, além de tradições como o Día de los Muertos e uma gastronomia muito conhecida.';
+            } else if (q.includes('falso amigo') || q.includes('falsos amigos')) {
+                answer = 'Falsos amigos são palavras parecidas em português e espanhol, mas com significados diferentes. Um exemplo é “exquisito”: em espanhol, normalmente significa “delicioso” ou “de excelente qualidade”.';
+            } else if (q.includes('gracias') || q.includes('obrigad')) {
+                answer = '<strong>Gracias</strong> significa “obrigado” ou “obrigada”. Uma resposta comum é <strong>de nada</strong>, equivalente a “de nada” em português.';
+            } else {
+                answer = 'Essa é uma ótima pergunta! Neste protótipo, o Tutor Cultural responde a dúvidas básicas de espanhol e cultura hispânica. Tente perguntar sobre <strong>vos e tú</strong>, saudações, falsos amigos ou algum país hispânico.';
+            }
 
             responseBox.classList.remove('hidden');
-            responseBox.innerHTML = '<span class="text-teal-600 font-semibold animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-1"></i> O Tutor Cultural está pensando...</span>';
+            responseBox.innerHTML = `<span class="text-teal-700">${answer}</span>`;
+        }
 
-            const apiKey = ""; // Canvas runtime injection
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+        /* ==========================================
+           INITIALIZATION
+           ========================================== */
+        document.addEventListener('DOMContentLoaded', function () {
+            renderCountries('all');
+            switchCultureSubtab('comidas');
+            switchTab('inicio');
 
-            const systemPrompt = "Você é um tutor cultural e de espanhol extremamente amigável, didático e entusiasmado. Responda em português de forma concisa (máximo 3 frases) sobre dúvidas de espanhol ou cultura hispânica.";
-
-            const payload = {
-                contents: [{ parts: [{ text: query }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
-            try {
-                const res = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+            const aiInput = document.getElementById('ai-query-input');
+            if (aiInput) {
+                aiInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        askGeminiTutor();
+                    }
                 });
+            }
+
+            const translatorInput = document.getElementById('pt-input-text');
+            if (translatorInput) {
+                translatorInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' && !event.shiftKey) {
+                        event.preventDefault();
+                        executeTranslation();
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>
